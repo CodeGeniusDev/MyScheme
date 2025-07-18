@@ -39,11 +39,18 @@
 
 import mongoose from "mongoose";
 
+declare global {
+  var mongoose: {
+    conn: typeof import('mongoose') | null;
+    promise: Promise<typeof import('mongoose')> | null;
+  } | undefined;
+}
+
 const MONGODB_URI = process.env.MONGODB_URI || "";
 
 if (!MONGODB_URI) throw new Error("Please define MONGODB_URI in .env.local");
 
-let cached = global.mongoose || { conn: null, promise: null };
+const cached = global.mongoose || { conn: null, promise: null };
 
 async function dbConnect() {
   if (cached.conn) return cached.conn;
